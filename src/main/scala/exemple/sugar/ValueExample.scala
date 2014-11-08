@@ -6,17 +6,14 @@ import com.explora.pattern.QueryHelper._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-object ValueExample extends App with DBPediaFr{
+object ValueExample extends App with DBPediaFr {
 
 
+  val National_Gallery = "http://fr.dbpedia.org/resource/National_Gallery".entity
 
-  //Create Entity like that ...
-  val National_Gallery = Entity("http://fr.dbpedia.org/resource/National_Gallery")
+  val wikiPageWikiLink: Entity = "http://dbpedia.org/ontology/wikiPageWikiLink".entity
 
-  //Or Like that
-  val wikiPageRedirects = "http://dbpedia.org/ontology/wikiPageRedirects".entity
-
-  val valueOfF = National_Gallery valueOf wikiPageRedirects
+  val valueOfF = National_Gallery valueOf wikiPageWikiLink
 
   valueOfF.map { tr =>
 
@@ -27,7 +24,9 @@ object ValueExample extends App with DBPediaFr{
     }
   }
 
-  val valueFrom = National_Gallery valueFrom wikiPageRedirects
+  val pageRedirect: Entity = "http://dbpedia.org/ontology/wikiPageRedirects".entity
+
+  val valueFrom = National_Gallery valueFrom pageRedirect
 
   valueFrom.map { tr =>
     println("====================valueFrom====================")
