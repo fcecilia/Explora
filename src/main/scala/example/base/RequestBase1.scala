@@ -1,4 +1,4 @@
-package exemple.base
+package example.base
 
 import com.explora.model.Repository
 

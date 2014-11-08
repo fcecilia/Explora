@@ -1,4 +1,4 @@
-package exemple.sugar
+package example.sugar
 
 import com.explora.ld.dbpedia.DBPedia
 import com.explora.pattern.QueryHelper._
