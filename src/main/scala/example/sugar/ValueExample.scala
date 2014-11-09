@@ -2,7 +2,7 @@ package example.sugar
 
 import com.explora.ld.dbpedia.DBPediaFr
 import com.explora.model.{Entity, Literal}
-import com.explora.pattern.QueryHelper._
+import com.explora.pattern.ExploraHelper._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 

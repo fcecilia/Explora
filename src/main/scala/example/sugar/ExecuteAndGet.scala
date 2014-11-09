@@ -1,7 +1,7 @@
 package example.sugar
 
 import com.explora.ld.dbpedia.DBPedia
-import com.explora.pattern.QueryHelper._
+import com.explora.pattern.ExploraHelper._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
