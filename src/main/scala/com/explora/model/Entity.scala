@@ -9,6 +9,8 @@ import scala.collection.immutable.Map
 case class Entity(uri: String)(implicit repository: Repository) extends RDFNode {
 
 
+  override def toString = uri
+
   val value = uri
 
   def valueFrom(value: Entity): Future[Stream[RDFNode]] = valueFrom(value.uri)
