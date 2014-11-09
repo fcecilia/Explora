@@ -15,7 +15,7 @@ import scala.concurrent.Future
 
 object Main extends App {
 
-  val film = "Pretty_Woman"
+  val film = "The_Matrix"
 
   for {
     dbpedia <- MoviesRecoDBPedia.start(film)
@@ -50,16 +50,16 @@ trait RecoEngine {
 
 
     val requestF = s"""
-  select distinct ?movies ?Concept where {
+  select ?movies  where {
     {
-      <$film> <http://dbpedia.org/ontology/starring> ?Concept.
-      ?movies <http://dbpedia.org/ontology/starring> ?Concept.
+      <$film> <http://dbpedia.org/ontology/starring> ?starring.
+      ?movies <http://dbpedia.org/ontology/starring> ?starring.
     } UNION {
-      <$film> <http://dbpedia.org/ontology/director> ?Concept.
-      ?movies <http://dbpedia.org/ontology/director> ?Concept.
+      <$film> <http://dbpedia.org/ontology/director> ?director.
+      ?movies <http://dbpedia.org/ontology/director> ?director.
     } UNION {
-      <$film> <http://purl.org/dc/terms/subject> ?Concept.
-       ?movies <http://purl.org/dc/terms/subject> ?Concept.
+      <$film> <http://purl.org/dc/terms/subject> ?subject.
+       ?movies <http://purl.org/dc/terms/subject> ?subject.
     }
    } """ executeAndGet "movies"
 
@@ -67,11 +67,11 @@ trait RecoEngine {
 
       val movies: Stream[String] = nodes.onlyEntities.filter(n => n != film).map(_.uri)
 
-      val by: List[(String, Int)] = movies.groupBy(a => a).map(m => (m._1, m._2.size)).toList.sortBy(-_._2).take(10)
+      val by: List[(String, Int)] = movies.groupBy(a => a).map(m => (m._1, m._2.size)).toList.sortBy(-_._2).take(50)
 
       println(System.currentTimeMillis() - smillis)
 
-      by.map(_._1.replace("http://dbpedia.org/resource/", "en.wikipedia.org/wiki/")).foreach(println)
+      by.map(t =>t._1.replace("http://dbpedia.org/resource/", "en.wikipedia.org/wiki/") +": "+t._2).foreach(println)
 
     }
   }
