@@ -2,7 +2,7 @@ organization := "com.explora"
 
 version := "0.1-SNAPSHOT"
 
-scalaVersion := "2.10.4"
+scalaVersion := "2.11.2"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
@@ -11,12 +11,10 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= {
-  val akkaV = "2.2.3"
-  val sprayV = "1.2.0"
+  val sprayV = "1.3.2"
   Seq(
     "io.spray" % "spray-can" % sprayV,
-    "io.spray" % "spray-client" % sprayV,
-    "com.typesafe.akka" %% "akka-actor" % akkaV
+    "io.spray" % "spray-client" % sprayV
   )
 }
 
