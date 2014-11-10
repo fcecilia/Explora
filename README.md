@@ -19,5 +19,5 @@ Just "sbt publish-local"
 Example 
 =======
 
-Some example on  [here](https://github.com/naiky/Explora-Example) !
+Some example [here](https://github.com/naiky/Explora-Example) !
 
