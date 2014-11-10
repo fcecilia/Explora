@@ -19,6 +19,9 @@ trait DBTrait {
 
   def DBEntity(s: String) = Entity(uri(s))
 
+  def wikiPage(url:String) = url.replace("http://dbpedia.org/resource/", "en.wikipedia.org/wiki/")
+  def wikiPage(e:Entity) = e.uri.replace("http://dbpedia.org/resource/", "en.wikipedia.org/wiki/")
+
 
 }
 

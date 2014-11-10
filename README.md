@@ -7,5 +7,5 @@ It's a "Just for fun project"  ;)
 
 The documentation will come .. ... 
 
-For the moment just look example [here](https://github.com/naiky/Explora/tree/master/src/main/scala/example) !
+For the moment just look example [here](https://github.com/naiky/Explora-Example) !
 
