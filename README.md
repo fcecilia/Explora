@@ -9,3 +9,15 @@ The documentation will come .. ...
 
 For the moment just look example [here](https://github.com/naiky/Explora-Example) !
 
+
+
+Installation
+============
+
+Just "sbt publish-local" 
+
+Example 
+=======
+
+Some example on  [here](https://github.com/naiky/Explora-Example) !
+
