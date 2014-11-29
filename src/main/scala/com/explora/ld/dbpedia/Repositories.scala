@@ -1,6 +1,9 @@
 package com.explora.ld.dbpedia
 
+import com.explora.executer.Executer
 import com.explora.model.{Entity, Repository}
+
+import scala.concurrent.ExecutionContext
 
 /**
  * Created by fred on 15/03/2014.
@@ -9,18 +12,26 @@ import com.explora.model.{Entity, Repository}
 
 trait DBTrait {
 
+
   def uri_base: String
+
   def uri_base_resource: String
-  implicit lazy val repository = Repository(repo_uri)
+
+  implicit def repository(implicit ex: Executer, ec: ExecutionContext) = Repository(repo_uri)(ex, ec)
 
   def repo_uri: String = uri_base + "/sparql"
 
   def uri(s: String) = uri_base_resource + "/resource/" + s
 
-  def DBEntity(s: String) = Entity(uri(s))
+  def DBEntity(s: String)(implicit ex: Executer, ec: ExecutionContext) = {
 
-  def wikiPage(url:String) = url.replace("http://dbpedia.org/resource/", "en.wikipedia.org/wiki/")
-  def wikiPage(e:Entity) = e.uri.replace("http://dbpedia.org/resource/", "en.wikipedia.org/wiki/")
+
+    Entity(uri(s))(repository(ex, ec), ec)
+  }
+
+  def wikiPage(url: String) = url.replace("http://dbpedia.org/resource/", "en.wikipedia.org/wiki/")
+
+  def wikiPage(e: Entity) = e.uri.replace("http://dbpedia.org/resource/", "en.wikipedia.org/wiki/")
 
 
 }

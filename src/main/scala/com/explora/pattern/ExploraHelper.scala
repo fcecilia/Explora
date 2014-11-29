@@ -1,8 +1,7 @@
 package com.explora.pattern
 
 import com.explora.model.{Literal, RDFNode, Entity, Repository}
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.ExecutionContext
 
 
 /**
@@ -15,7 +14,7 @@ object ExploraHelper {
 
     def execute(implicit rep: Repository) = rep.execute(s)
 
-    def executeAndGet (variable: String)(implicit rep: Repository) = {
+    def executeAndGet (variable: String)(implicit rep: Repository, ex:ExecutionContext) = {
       rep.execute(s).map(m =>
         m.get(variable)
       )
@@ -24,7 +23,7 @@ object ExploraHelper {
   }
 
 
-  implicit class String2Entity(s: String)(implicit rep: Repository) {
+  implicit class String2Entity(s: String)(implicit rep: Repository,ex:ExecutionContext) {
 
 
     def entity = Entity(s)
@@ -32,7 +31,7 @@ object ExploraHelper {
   }
 
 
-  implicit class LiteralEntity(nodes: List[RDFNode])(implicit rep: Repository){
+  implicit class LiteralEntity(nodes: List[RDFNode])(implicit rep: Repository,ex:ExecutionContext){
 
     def onlyEntities =
 

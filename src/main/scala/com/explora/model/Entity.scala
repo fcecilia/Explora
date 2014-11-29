@@ -1,12 +1,8 @@
 package com.explora.model
 
-import scala.concurrent.Future
-import scala.concurrent.future
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala._
-import scala.collection.immutable.Map
+import scala.concurrent.{ExecutionContext, Future}
 
-case class Entity(uri: String)(implicit repository: Repository) extends RDFNode {
+case class Entity(uri: String)(implicit repository: Repository, ex: ExecutionContext) extends RDFNode {
 
 
   override def toString = uri
@@ -20,8 +16,7 @@ case class Entity(uri: String)(implicit repository: Repository) extends RDFNode 
 
     val onto = value
     val request = s"""SELECT ?data WHERE { ?data <$onto> <$uri> } """
-    /* val resultF = repository.execute(request)
-     resultF.map(resul => for (listMap <- resul.stream) yield listMap.get("data").get)*/
+
     repository.execute(request).map(_("data"))
 
   }
@@ -46,17 +41,12 @@ case class Entity(uri: String)(implicit repository: Repository) extends RDFNode 
 
       val SPARQL = request(en.uri, onto.uri)
       val resultatF = repository.execute(SPARQL)
-      for (resultat <- resultatF) yield
-      {
+      for (resultat <- resultatF) yield {
         resultat.stream.flatMap(_.values.toList)
       }
     }
 
-
-
-
-
-      exploration(this, ontology)
+    exploration(this, ontology)
 
   }
 
@@ -92,11 +82,6 @@ case class Entity(uri: String)(implicit repository: Repository) extends RDFNode 
     })
     result
   }
-
-
-
-
-
 
 
 }
