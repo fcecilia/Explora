@@ -13,10 +13,10 @@ case class Entity(uri: String)(implicit repository: Repository) extends RDFNode 
 
   val value = uri
 
-  def valueFrom(value: Entity): Future[Stream[RDFNode]] = valueFrom(value.uri)
+  def valueFrom(value: Entity): Future[List[RDFNode]] = valueFrom(value.uri)
 
 
-  def valueFrom(value: String): Future[Stream[RDFNode]] = {
+  def valueFrom(value: String): Future[List[RDFNode]] = {
 
     val onto = value
     val request = s"""SELECT ?data WHERE { ?data <$onto> <$uri> } """
@@ -27,15 +27,15 @@ case class Entity(uri: String)(implicit repository: Repository) extends RDFNode 
   }
 
 
-  def valueOf(value: String): Future[Stream[RDFNode]] = valueOf(Entity(value))
+  def valueOf(value: String): Future[List[RDFNode]] = valueOf(Entity(value))
 
 
-  def valueOf(ontology: Entity): Future[Stream[RDFNode]] = {
+  def valueOf(ontology: Entity): Future[List[RDFNode]] = {
 
 
     def request(en_uri: String, ont_uri: String) = s"""SELECT ?data WHERE { <$en_uri> <$ont_uri> ?data } """
 
-    def explorationList(ens: Stream[Entity], ontos: Stream[Entity]) = {
+    def explorationList(ens: List[Entity], ontos: List[Entity]) = {
       Future.sequence(for (en <- ens; onto <- ontos) yield exploration(en, onto))
 
     }
@@ -79,7 +79,7 @@ case class Entity(uri: String)(implicit repository: Repository) extends RDFNode 
     result.map(_.toList)
   }
 
-  lazy val linkedEntity: Future[Stream[Entity]] = {
+  lazy val linkedEntity: Future[List[Entity]] = {
 
     val request = s"""SELECT distinct ?enti WHERE { <$uri> ?onto ?enti }"""
     val resultatF = repository.execute(request)

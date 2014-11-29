@@ -2,23 +2,22 @@ organization := "com.explora"
 
 name := "explora-core"
 
-version := "0.1-SNAPSHOT"
+version := "0.1.1-SNAPSHOT"
 
 scalaVersion := "2.10.4"
 
 scalacOptions := Seq("-unchecked", "-deprecation", "-encoding", "utf8")
 
 resolvers ++= Seq(
-  "spray repo" at "http://repo.spray.io/"
+    "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/releases/"
 )
 
 libraryDependencies ++= {
-  val sprayV = "1.3.1"
-  val akkaV = "2.3.6"
-  Seq(
-    "io.spray" % "spray-can" % sprayV,
-    "io.spray" % "spray-client" % sprayV,
-    "com.typesafe.akka" %% "akka-actor" % akkaV
+  val sesameV: String = "2.7.14"
+  Seq( "org.openrdf.sesame" % "sesame" %  sesameV,
+    "org.openrdf.sesame" % "sesame-repository-http" %  sesameV,
+    "org.openrdf.sesame" % "sesame-queryresultio-sparqlxml" % sesameV,
+    "commons-logging" % "commons-logging" % "1.2"
   )
 }
 

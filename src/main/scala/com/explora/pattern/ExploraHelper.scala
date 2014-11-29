@@ -16,7 +16,9 @@ object ExploraHelper {
     def execute(implicit rep: Repository) = rep.execute(s)
 
     def executeAndGet (variable: String)(implicit rep: Repository) = {
-      rep.execute(s).map(m =>m.get(variable))
+      rep.execute(s).map(m =>
+        m.get(variable)
+      )
     }
 
   }
@@ -30,7 +32,7 @@ object ExploraHelper {
   }
 
 
-  implicit class LiteralEntity(nodes: Stream[RDFNode])(implicit rep: Repository){
+  implicit class LiteralEntity(nodes: List[RDFNode])(implicit rep: Repository){
 
     def onlyEntities =
 
