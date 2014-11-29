@@ -17,7 +17,8 @@ libraryDependencies ++= {
   Seq( "org.openrdf.sesame" % "sesame" %  sesameV,
     "org.openrdf.sesame" % "sesame-repository-http" %  sesameV,
     "org.openrdf.sesame" % "sesame-queryresultio-sparqlxml" % sesameV,
-    "commons-logging" % "commons-logging" % "1.2"
+    "commons-logging" % "commons-logging" % "1.2",
+    "org.apache.jena" % "jena-arq" % "2.12.1"
   )
 }
 
