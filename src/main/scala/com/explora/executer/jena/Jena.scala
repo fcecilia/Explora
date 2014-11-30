@@ -1,15 +1,12 @@
 package com.explora.executer.jena
 
-import java.util.concurrent.Executors
-
 import com.explora.executer.Executer
-import com.explora.model.{Entity, Literal, RDFNode, Repository}
 import com.explora.model.Repository.SPARQLResults
-import scala.concurrent.{Future, ExecutionContext}
-import scala.collection.immutable.Map
-
+import com.explora.model.{Entity, Literal, RDFNode, Repository}
 import com.hp.hpl.jena.query._
 
+import scala.collection.immutable.Map
+import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 /**
@@ -25,18 +22,18 @@ trait JenaContext {
 
 object JenaExecuter extends Executer {
 
-  lazy val newEc = ExecutionContext.fromExecutorService(Executors.newCachedThreadPool())
+  // lazy val newEc = ExecutionContext.fromExecutorService(Executors.newCachedThreadPool())
 
 
   def execute(req: String, rep: Repository)(implicit ex: ExecutionContext): Future[SPARQLResults] = {
 
     /**
      *
-     * DON T USE DEFAULT ExecutionContext.Implicits.global WITH JENA
+     * DON T USE DEFAULT ExecutionContext.Implicits.global WITH JENA With IntelliJ
      *
      */
 
-    implicit val ec = if (ex.eq(scala.concurrent.ExecutionContext.Implicits.global)) newEc else ex
+    //   implicit val ec = if (ex.eq(scala.concurrent.ExecutionContext.Implicits.global)) newEc else ex
 
     val query: Query = QueryFactory.create(req, Syntax.syntaxARQ)
     val qe: QueryExecution = QueryExecutionFactory.sparqlService(rep.url, query)
@@ -71,7 +68,7 @@ object JenaExecuter extends Executer {
       }
     }
 
-    Future(SPARQLResults(getter(results, List.empty[Map[String, RDFNode]])))(ec)
+    Future(SPARQLResults(getter(results, List.empty[Map[String, RDFNode]])))
   }
 
 }
