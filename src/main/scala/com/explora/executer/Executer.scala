@@ -17,6 +17,8 @@ trait Executer {
 
   def execute(req: String, rep: Repository)(implicit ex: ExecutionContext): Future[SPARQLResults]
 
+
+
 }
 
 

@@ -3,12 +3,13 @@ package com.explora.executer.sesame
 import com.explora.executer.Executer
 import com.explora.model.{Entity, Literal, RDFNode, Repository}
 import com.explora.model.Repository.SPARQLResults
+import scala.concurrent.{Future, ExecutionContext}
+import scala.collection.immutable.Map
+
 import org.openrdf.model.impl.{URIImpl, LiteralImpl}
 import org.openrdf.query.{TupleQueryResult, QueryLanguage}
 import org.openrdf.repository.http.HTTPRepository
 
-import scala.collection.immutable.Map
-import scala.concurrent.{Future, ExecutionContext}
 
 /**
  * Created by fred on 29/11/2014.
@@ -28,15 +29,11 @@ object SesameExecuter extends Executer {
 
 
     val repository = new HTTPRepository(rep.url)
-
     repository.initialize
-
-
     val connection = repository.getConnection
-
     val selectQuery = connection.prepareTupleQuery(QueryLanguage.SPARQL, req)
-
     val selectQueryResult = selectQuery.evaluate()
+
 
     import scala.collection.JavaConversions._
     val aBindingNames = selectQueryResult.getBindingNames.toList
@@ -52,7 +49,7 @@ object SesameExecuter extends Executer {
 
           val v = aBinding.getValue(name) match {
             case l: LiteralImpl => Literal(l.getLabel, l.getLanguage)
-            case u: URIImpl => Entity(u.toString)(rep, ex)
+            case u: URIImpl => Entity(u.toString)(rep)
           }
 
           name -> v

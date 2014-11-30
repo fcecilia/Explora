@@ -1,18 +1,20 @@
 package com.explora.model
 
+import com.explora.executer.Executer
+
 import scala.concurrent.{ExecutionContext, Future}
 
-case class Entity(uri: String)(implicit repository: Repository, ex: ExecutionContext) extends RDFNode {
+case class Entity(uri: String)(implicit repository: Repository) extends RDFNode {
 
 
   override def toString = uri
 
   val value = uri
 
-  def valueFrom(value: Entity): Future[List[RDFNode]] = valueFrom(value.uri)
+  def valueFrom(value: Entity)( implicit ex: Executer, ec: ExecutionContext): Future[List[RDFNode]] = valueFrom(value.uri)
 
 
-  def valueFrom(value: String): Future[List[RDFNode]] = {
+  def valueFrom(value: String)( implicit ex: Executer, ec: ExecutionContext): Future[List[RDFNode]] = {
 
     val onto = value
     val request = s"""SELECT ?data WHERE { ?data <$onto> <$uri> } """
@@ -22,10 +24,10 @@ case class Entity(uri: String)(implicit repository: Repository, ex: ExecutionCon
   }
 
 
-  def valueOf(value: String): Future[List[RDFNode]] = valueOf(Entity(value))
+  def valueOf(value: String)( implicit ex: Executer, ec: ExecutionContext): Future[List[RDFNode]] = valueOf(Entity(value))
 
 
-  def valueOf(ontology: Entity): Future[List[RDFNode]] = {
+  def valueOf(ontology: Entity)( implicit ex: Executer, ec: ExecutionContext): Future[List[RDFNode]] = {
 
 
     def request(en_uri: String, ont_uri: String) = s"""SELECT ?data WHERE { <$en_uri> <$ont_uri> ?data } """
@@ -56,7 +58,7 @@ case class Entity(uri: String)(implicit repository: Repository, ex: ExecutionCon
 
   }
 
-  lazy val ontologies: Future[List[Entity]] = {
+ def ontologies( implicit ex: Executer, ec: ExecutionContext): Future[List[Entity]] = {
 
 
     val request = s"""SELECT distinct ?onto WHERE { <$uri> ?onto ?data }"""
@@ -69,7 +71,7 @@ case class Entity(uri: String)(implicit repository: Repository, ex: ExecutionCon
     result.map(_.toList)
   }
 
-  lazy val linkedEntity: Future[List[Entity]] = {
+  def linkedEntity( implicit ex: Executer, ec: ExecutionContext): Future[List[Entity]] = {
 
     val request = s"""SELECT distinct ?enti WHERE { <$uri> ?onto ?enti }"""
     val resultatF = repository.execute(request)

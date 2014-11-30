@@ -1,5 +1,6 @@
 package com.explora.pattern
 
+import com.explora.executer.Executer
 import com.explora.model.{Literal, RDFNode, Entity, Repository}
 import scala.concurrent.ExecutionContext
 
@@ -12,9 +13,9 @@ object ExploraHelper {
 
   implicit class StringRequest(s: String) {
 
-    def execute(implicit rep: Repository) = rep.execute(s)
+    def execute(implicit rep: Repository,ex: Executer, ec: ExecutionContext) = rep.execute(s)
 
-    def executeAndGet (variable: String)(implicit rep: Repository, ex:ExecutionContext) = {
+    def executeAndGet (variable: String)(implicit rep: Repository, ex: Executer, ec: ExecutionContext) = {
       rep.execute(s).map(m =>
         m.get(variable)
       )

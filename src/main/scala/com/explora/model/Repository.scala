@@ -25,14 +25,15 @@ object Repository {
 }
 
 
-case class Repository(url: String)(implicit ex: Executer, ec: ExecutionContext) {
+case class Repository(url: String) {
 
-  def executeOne(req: String): Future[Option[SPARQLResult]] = execute(req).map(resul => if (resul.isEmpty) None else Some(resul.stream(0)))
+  def executeOne(req: String)( implicit ex: Executer, ec: ExecutionContext): Future[Option[SPARQLResult]] = execute(req).map(resul => if (resul.isEmpty) None else Some(resul.stream(0)))
 
 
-  def execute(req: String): Future[SPARQLResults] = {
+  def execute(req: String)(implicit ex: Executer, ec: ExecutionContext): Future[SPARQLResults] = {
 
     ex.execute(req, this)
+
   }
 
 

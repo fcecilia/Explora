@@ -17,7 +17,7 @@ trait DBTrait {
 
   def uri_base_resource: String
 
-  implicit def repository(implicit ex: Executer, ec: ExecutionContext) = Repository(repo_uri)(ex, ec)
+  implicit lazy val repository= Repository(repo_uri)
 
   def repo_uri: String = uri_base + "/sparql"
 
@@ -26,7 +26,7 @@ trait DBTrait {
   def DBEntity(s: String)(implicit ex: Executer, ec: ExecutionContext) = {
 
 
-    Entity(uri(s))(repository(ex, ec), ec)
+    Entity(uri(s))(repository)
   }
 
   def wikiPage(url: String) = url.replace("http://dbpedia.org/resource/", "en.wikipedia.org/wiki/")

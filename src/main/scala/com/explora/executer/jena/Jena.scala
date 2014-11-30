@@ -1,16 +1,15 @@
 package com.explora.executer.jena
 
-import java.util
+import java.util.concurrent.Executors
 
 import com.explora.executer.Executer
-import com.explora.model.Repository.SPARQLResults
 import com.explora.model.{Entity, Literal, RDFNode, Repository}
-import com.hp.hpl.jena.query._
-import org.openrdf.query.TupleQueryResult
-
+import com.explora.model.Repository.SPARQLResults
+import scala.concurrent.{Future, ExecutionContext}
 import scala.collection.immutable.Map
-import scala.collection.mutable
-import scala.concurrent.{ExecutionContext, Future}
+
+import com.hp.hpl.jena.query._
+
 import scala.util.Try
 
 /**
@@ -26,20 +25,25 @@ trait JenaContext {
 
 object JenaExecuter extends Executer {
 
+  lazy val newEc = ExecutionContext.fromExecutorService(Executors.newCachedThreadPool())
+
 
   def execute(req: String, rep: Repository)(implicit ex: ExecutionContext): Future[SPARQLResults] = {
+
+    /**
+     *
+     * DON T USE DEFAULT ExecutionContext.Implicits.global WITH JENA
+     *
+     */
+
+    implicit val ec = if (ex.eq(scala.concurrent.ExecutionContext.Implicits.global)) newEc else ex
+
     val query: Query = QueryFactory.create(req, Syntax.syntaxARQ)
-
-
     val qe: QueryExecution = QueryExecutionFactory.sparqlService(rep.url, query)
-
-
-
     val results = qe.execSelect
 
 
     import scala.collection.JavaConversions._
-
     val aBindingNames = results.getResultVars.toList
 
 
@@ -54,11 +58,10 @@ object JenaExecuter extends Executer {
           val opt = Try(aBinding.get(name).asLiteral()).toOption
           val v: RDFNode = opt match {
 
-            case None => Entity(aBinding.get(name).asResource().getURI)(rep, ex)
+            case None => Entity(aBinding.get(name).asResource().getURI)(rep)
             case Some(l) => Literal(l.getString, l.getLanguage)
           }
 
-          v
           name -> v
         }.toMap
         getter(selectQueryResult, accSub :: accu)
@@ -68,10 +71,7 @@ object JenaExecuter extends Executer {
       }
     }
 
-    val ter: List[Map[String, RDFNode]] = getter(results, List.empty[Map[String, RDFNode]])
-    println(ter)
-    Future(SPARQLResults(ter))
-
-}
+    Future(SPARQLResults(getter(results, List.empty[Map[String, RDFNode]])))(ec)
+  }
 
 }
